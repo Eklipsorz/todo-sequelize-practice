@@ -4,7 +4,7 @@ const { create } = require('express-handlebars')
 
 const routes = require('./routes')
 
-const port = 3000
+const port = 3500
 const app = express()
 
 const handlebars = create({
