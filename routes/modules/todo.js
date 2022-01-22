@@ -44,19 +44,25 @@ router.get('/:id/edit', (req, res) => {
 
 
 // update todo
-// create todo
+router.put('/:id', async (req, res) => {
+  const { name, isDone } = req.body
+  const id = req.params.id
+
+
+  const targetTodo = await Todo.findByPk(id)
+  targetTodo.name = name
+  targetTodo.isDone = isDone === 'on'
+
+  await targetTodo.save()
+  res.redirect('/')
+})
 
 // delete todo
 router.delete('/:id', async (req, res) => {
   const id = req.params.id
-  const UserId = req.user.id
-
   const targetTodo = await Todo.findByPk(id)
   await targetTodo.destroy()
   res.redirect('/')
 })
 
-// router.delete('/:id', (req, res) => {
-
-// })
 exports = module.exports = router
