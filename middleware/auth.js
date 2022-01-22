@@ -1,5 +1,5 @@
 function authenticator(req, res, next) {
-  if (req.authenticator) {
+  if (req.isAuthenticated()) {
     return next()
   }
   req.flash('loginfirst-warning-message', 'You need to login first!!')
