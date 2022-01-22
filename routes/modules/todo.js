@@ -12,8 +12,19 @@ router.get('/new', (req, res) => {
   res.render('new')
 })
 
+router.post('/', (req, res) => {
+  const { name } = req.body
+  const UserId = req.user.id
 
-
+  Todo.create({
+    UserId,
+    name,
+    createdAt: new Date(),
+    updatedAt: new Date()
+  })
+    .then(() => res.redirect('/'))
+    .catch((error) => console.log(error))
+})
 
 
 router.get('/:id', (req, res) => {
@@ -36,6 +47,7 @@ router.get('/:id/edit', (req, res) => {
 // create todo
 
 // delete todo
+
 
 // router.delete('/:id', (req, res) => {
 

@@ -4,11 +4,16 @@ const { create } = require('express-handlebars')
 const session = require('express-session')
 const usePassport = require('./config/passport')
 const flash = require('connect-flash')
+
+
 const routes = require('./routes')
 
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
 
 
-const port = 3500
+const port = process.env.PORT || 3000
 const app = express()
 
 const handlebars = create({
@@ -23,7 +28,7 @@ app.set('view engine', '.hbs')
 
 
 app.use(session({
-  secret: 'TheGoodCat',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false
 }))
