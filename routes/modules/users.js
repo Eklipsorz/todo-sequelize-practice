@@ -1,6 +1,7 @@
 
 const express = require('express')
 const passport = require('passport')
+const bcrypt = require('bcryptjs')
 const db = require('../../models')
 const User = db.User
 
@@ -23,16 +24,35 @@ router.get('/register', (req, res) => {
 
 router.post('/register', (req, res) => {
   const { name, email, password, confirmPassword } = req.body
-  User.findOne({ where: { email } }).then(user => {
-    console.log(user)
-    if (user) {
-      console.log('User already exists')
+  const registerWarningMessages = []
 
+  if (!name || !email || !password || !confirmPassword) {
+    registerWarningMessages.push('Please input all fields')
+  }
+
+  if (password !== confirmPassword) {
+    registerWarningMessages.push('The passwords are not same!!')
+  }
+
+  if (registerWarningMessages.length) {
+    return res.render('register', {
+      name,
+      email,
+      password,
+      confirmPassword,
+      registerWarningMessages
+    })
+  }
+
+  User.findOne({ where: { email } }).then(user => {
+    if (user) {
+      registerWarningMessages.push('User already exists')
       return res.render('register', {
         name,
         email,
         password,
-        confirmPassword
+        confirmPassword,
+        registerWarningMessages
       })
     }
     return bcrypt
