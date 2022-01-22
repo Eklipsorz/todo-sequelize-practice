@@ -3,6 +3,7 @@ const methodOverride = require('method-override')
 const { create } = require('express-handlebars')
 const session = require('express-session')
 const usePassport = require('./config/passport')
+const flash = require('connect-flash')
 const routes = require('./routes')
 
 
@@ -32,8 +33,16 @@ app.use(express.urlencoded({ extended: true }))
 
 
 app.use(express.static('public'))
-
 usePassport(app)
+app.use(flash())
+app.use('/', (req, res, next) => {
+  res.locals.isAuthenticated = req.isAuthenticated
+  res.locals.user = req.user
+  res.locals.loginFailureMessage = req.flash('error')
+  res.locals.loginFirstWarningMessage = req.flash('loginfirst-warning-message')
+  res.locals.logoutSuccessMessage = req.flash('logout-success-message')
+  next()
+})
 
 
 app.use('/', routes)
